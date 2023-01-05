@@ -11,13 +11,13 @@ import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.subsystems.Timing;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.OnBoardIO;
-import frc.robot.subsystems.OnBoardIO.ChannelMode;
+//import frc.robot.subsystems.OnBoardIO;
+//import frc.robot.subsystems.OnBoardIO.ChannelMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
+//import edu.wpi.first.wpilibj2.command.PrintCommand;
+//import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,7 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Timing m_timing = new Timing();
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
+  //private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
   // Assumes a gamepad plugged into channnel 0
   private final XboxController m_controller = new XboxController(0);
@@ -65,11 +65,11 @@ public class RobotContainer {
     // is scheduled over it.
     m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
 
-    // Example of how to use the onboard IO
-    Button onboardButtonA = new Button(m_onboardIO::getButtonAPressed);
-    onboardButtonA
-        .whenActive(new PrintCommand("Button A Pressed"))
-        .whenInactive(new PrintCommand("Button A Released"));
+    // // Example of how to use the onboard IO
+    // Button onboardButtonA = new Button(m_onboardIO::getButtonAPressed);
+    // onboardButtonA
+    //     .whenActive(new PrintCommand("Button A Pressed"))
+    //     .whenInactive(new PrintCommand("Button A Released"));
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
