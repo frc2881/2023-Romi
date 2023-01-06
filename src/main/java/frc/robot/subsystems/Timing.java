@@ -10,7 +10,7 @@ public class Timing extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Timing/RobotTime", Timer.getFPGATimestamp());
+    SmartDashboard.putNumber("Timing/FPGATimestamp", Timer.getFPGATimestamp());
     SmartDashboard.putNumber("Timing/MatchTime", Math.floor(DriverStation.getMatchTime()));
   }
 }
