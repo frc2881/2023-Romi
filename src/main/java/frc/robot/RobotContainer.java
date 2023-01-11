@@ -4,20 +4,23 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.AutonomousDistance;
-import frc.robot.commands.AutonomousTime;
-import frc.robot.subsystems.Timing;
-import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.OnBoardIO;
-//import frc.robot.subsystems.OnBoardIO.ChannelMode;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.PrintCommand;
 //import edu.wpi.first.wpilibj2.command.button.Button;
+
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.AutonomousTime;
+import frc.robot.subsystems.Drivetrain;
+//import frc.robot.subsystems.OnBoardIO;
+//import frc.robot.subsystems.OnBoardIO.ChannelMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Timing m_timing = new Timing();
   private final Drivetrain m_drivetrain = new Drivetrain();
   //private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
@@ -94,5 +96,18 @@ public class RobotContainer {
   public Command getArcadeDriveCommand() {
     return new ArcadeDrive(
         m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(2));
+  }
+
+  private void updateFPGATimestamp() {
+    SmartDashboard.putNumber("Timing/FPGATimestamp", Timer.getFPGATimestamp());
+  }
+
+  private void updateMatchTime() {
+    SmartDashboard.putNumber("Timing/MatchTime", Math.floor(DriverStation.getMatchTime())); 
+  }
+
+  public void setCustomPeriodics(TimedRobot robot) {
+    robot.addPeriodic(() -> { this.updateFPGATimestamp(); }, 3);
+    robot.addPeriodic(() -> { this.updateMatchTime(); }, 0.2);
   }
 }
