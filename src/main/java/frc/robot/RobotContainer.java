@@ -107,7 +107,10 @@ public class RobotContainer {
   }
 
   public void setCustomPeriodics(TimedRobot robot) {
-    robot.addPeriodic(() -> { this.updateFPGATimestamp(); }, 3);
-    robot.addPeriodic(() -> { this.updateMatchTime(); }, 0.2);
+    updateFPGATimestamp();
+    robot.addPeriodic(() -> { updateFPGATimestamp(); }, 3);
+
+    updateMatchTime();
+    robot.addPeriodic(() -> { updateMatchTime(); }, 0.2);
   }
 }
