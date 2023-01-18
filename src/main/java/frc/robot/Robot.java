@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private static Robot m_robotInstance;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -24,10 +25,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    m_robotInstance = this;
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.setCustomPeriodics(this);
+  }
+
+  public static void addCustomPeriodic(Runnable callback, double periodSeconds) {
+    m_robotInstance.addPeriodic(callback, periodSeconds);
   }
 
   /**

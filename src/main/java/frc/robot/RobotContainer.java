@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.PrintCommand;
 //import edu.wpi.first.wpilibj2.command.button.Button;
 
+import frc.robot.Robot;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
@@ -54,6 +55,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    setupTimingTelemetry();
   }
 
   /**
@@ -98,19 +100,16 @@ public class RobotContainer {
         m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(4));
   }
 
+  private void setupTimingTelemetry() {
+    Robot.addCustomPeriodic(this::updateFPGATimestamp, 3);
+    Robot.addCustomPeriodic(this::updateMatchTime, 0.2);
+  }
+
   private void updateFPGATimestamp() {
     SmartDashboard.putNumber("Timing/FPGATimestamp", Timer.getFPGATimestamp());
   }
 
   private void updateMatchTime() {
     SmartDashboard.putNumber("Timing/MatchTime", Math.floor(DriverStation.getMatchTime())); 
-  }
-
-  public void setCustomPeriodics(TimedRobot robot) {
-    updateFPGATimestamp();
-    robot.addPeriodic(() -> { updateFPGATimestamp(); }, 3);
-
-    updateMatchTime();
-    robot.addPeriodic(() -> { updateMatchTime(); }, 0.2);
   }
 }
