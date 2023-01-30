@@ -31,9 +31,11 @@ public class RobotContainer {
   }
 
   private void setupControllers() {
-    // TODO: implement explicit command for automatic logging as opposed to instant command
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-      .onTrue(new InstantCommand(() -> { Log.log("Driver controller A button pressed"); }));
+    if (m_driverController.isConnected()) {
+      // TODO: implement explicit command for automatic logging as opposed to instant command
+      new JoystickButton(m_driverController, XboxController.Button.kA.value)
+        .onTrue(new InstantCommand(() -> { Log.log("Driver controller A button pressed"); }));
+    }
   }
 
   private void setupAutonomous() {

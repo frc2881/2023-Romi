@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
     if (Constants.kEnableAllTelemetry) {
       LiveWindow.enableAllTelemetry();
     }
-
+    
     Robot.addCustomPeriodic(this::updateFPGATimestamp, 3);
     Robot.addCustomPeriodic(this::updateMatchTime, 0.2);
   }
