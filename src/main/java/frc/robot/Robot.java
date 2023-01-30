@@ -1,38 +1,32 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2023 FRC Team 2881 - The Lady Cans
+//
+// Open Source Software; you can modify and/or share it under the terms of BSD
+// license file in the root directory of this project.
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
-public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
-  private static Robot m_robotInstance;
+import frc.robot.utils.Log;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+public class Robot extends TimedRobot {
+  private static Robot m_robotInstance;
+  private RobotContainer m_robotContainer;
+  private Command m_autonomousCommand;
+
   @Override
   public void robotInit() {
     m_robotInstance = this;
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    setupLogging();
+    setupTelemetry();
     m_robotContainer = new RobotContainer();
-  }
-
-  public static void addCustomPeriodic(Runnable callback, double periodSeconds) {
-    m_robotInstance.addPeriodic(callback, periodSeconds);
   }
 
   /**
@@ -98,4 +92,36 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public static void addCustomPeriodic(Runnable callback, double periodSeconds) {
+    m_robotInstance.addPeriodic(callback, periodSeconds);
+  }
+
+  private void setupLogging() {
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
+
+    Log.start();
+
+    CommandScheduler.getInstance().onCommandInitialize(command -> Log.init(command));
+    CommandScheduler.getInstance().onCommandInterrupt(command -> Log.end(command, true));
+    CommandScheduler.getInstance().onCommandFinish(command -> Log.end(command, false));
+  }
+
+  private void setupTelemetry() {
+    if (Constants.kEnableAllTelemetry) {
+      LiveWindow.enableAllTelemetry();
+    }
+
+    Robot.addCustomPeriodic(this::updateFPGATimestamp, 3);
+    Robot.addCustomPeriodic(this::updateMatchTime, 0.2);
+  }
+
+  private void updateFPGATimestamp() {
+    SmartDashboard.putNumber("Timing/FPGATimestamp", Timer.getFPGATimestamp());
+  }
+
+  private void updateMatchTime() {
+    SmartDashboard.putNumber("Timing/MatchTime", Math.floor(DriverStation.getMatchTime())); 
+  }
 }

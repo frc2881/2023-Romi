@@ -1,15 +1,18 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2023 FRC Team 2881 - The Lady Cans
+//
+// Open Source Software; you can modify and/or share it under the terms of BSD
+// license file in the root directory of this project.
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drivetrain;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+import frc.robot.subsystems.Drive;
+
 public class ArcadeDrive extends CommandBase {
-  private final Drivetrain m_drivetrain;
+  private final Drive m_drivetrain;
   private final Supplier<Double> m_xaxisSpeedSupplier;
   private final Supplier<Double> m_zaxisRotateSupplier;
 
@@ -22,7 +25,7 @@ public class ArcadeDrive extends CommandBase {
    * @param zaxisRotateSupplier Lambda supplier of rotational speed
    */
   public ArcadeDrive(
-      Drivetrain drivetrain,
+      Drive drivetrain,
       Supplier<Double> xaxisSpeedSupplier,
       Supplier<Double> zaxisRotateSupplier) {
     m_drivetrain = drivetrain;
