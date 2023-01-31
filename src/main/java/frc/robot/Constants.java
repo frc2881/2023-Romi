@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 public final class Constants {
 
   public static final class Telemetry {
@@ -18,7 +20,13 @@ public final class Constants {
     public static final int kLeftEncoderChannelB = 5;
     public static final int kRightEncoderChannelA = 6;
     public static final int kRightEncoderChannelB = 7;
+
     public static final double kCountsPerRevolution = 1440.0;
-    public static final double kWheelDiameterInch = 2.75591; // 70 mm
+    public static final double kWheelDiameterMeters = 0.07;
+    public static final double kMetersPerDegree = Math.PI * 0.141 / 360;
+    public static final double kTrackwidthMeters = 0.142072613;
+    
+    public static final DifferentialDriveKinematics kDriveKinematics = 
+      new DifferentialDriveKinematics(kTrackwidthMeters);
   }
 }

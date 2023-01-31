@@ -6,22 +6,29 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.commands.drive.DriveDistance;
 import frc.robot.commands.drive.TurnDegrees;
 import frc.robot.subsystems.Drive;
+import frc.robot.utils.Helpers;
 
-public class AutonomousDistance extends SequentialCommandGroup {
+public class RunAutoDistance extends SequentialCommandGroup {
   /**
    * Creates a new Autonomous Drive based on distance. This will drive out for a specified distance,
    * turn around and drive back.
    *
-   * @param drivetrain The drivetrain subsystem on which this command will run
+   * @param drive The drivetrain subsystem on which this command will run
    */
-  public AutonomousDistance(Drive drivetrain) {
+  public RunAutoDistance(Drive drive) {
+    drive.resetOdometry(Helpers.getDefaultPose());
+    
     addCommands(
-        new DriveDistance(-0.5, 10, drivetrain),
-        new TurnDegrees(-0.5, 180, drivetrain),
-        new DriveDistance(-0.5, 10, drivetrain),
-        new TurnDegrees(0.5, 180, drivetrain));
+      new DriveDistance(-0.5, 0.5, drive),
+      new TurnDegrees(-0.5, 180, drive),
+      new DriveDistance(-0.5, 0.5, drive),
+      new TurnDegrees(0.5, 180, drive)
+    );
+
+    addRequirements(drive);
   }
 }

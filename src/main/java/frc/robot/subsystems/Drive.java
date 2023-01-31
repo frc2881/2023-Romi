@@ -5,46 +5,55 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.utils.RomiGyro;
 
 public class Drive extends SubsystemBase {
-  // The Romi has the left and right motors set to
-  // PWM channels 0 and 1 respectively
   private final Spark m_leftMotor = new Spark(Constants.Drive.kLeftMotorChannel);
   private final Spark m_rightMotor = new Spark(Constants.Drive.kRightMotorChannel);
-
-  // The Romi has onboard encoders that are hardcoded
-  // to use DIO pins 4/5 and 6/7 for the left and right
   private final Encoder m_leftEncoder = new Encoder(Constants.Drive.kLeftEncoderChannelA, Constants.Drive.kLeftEncoderChannelB);
   private final Encoder m_rightEncoder = new Encoder(Constants.Drive.kRightEncoderChannelA, Constants.Drive.kRightEncoderChannelB);
-
-  // Set up the differential drive controller
   private final DifferentialDrive m_diffDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-
-  // Set up the RomiGyro
   private final RomiGyro m_gyro = new RomiGyro();
-
-  // Set up the BuiltInAccelerometer
   private final BuiltInAccelerometer m_accelerometer = new BuiltInAccelerometer();
+  private DifferentialDrivePoseEstimator m_poseEstimator;
+  private final Field2d m_field2d = new Field2d();
 
-  /** Creates a new Drivetrain. */
   public Drive() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotor.setInverted(true);
 
-    // Use inches as unit for encoder distances
-    m_leftEncoder.setDistancePerPulse((Math.PI * Constants.Drive.kWheelDiameterInch) / Constants.Drive.kCountsPerRevolution);
-    m_rightEncoder.setDistancePerPulse((Math.PI * Constants.Drive.kWheelDiameterInch) / Constants.Drive.kCountsPerRevolution);
+    m_leftEncoder.setDistancePerPulse((Math.PI * Constants.Drive.kWheelDiameterMeters) / Constants.Drive.kCountsPerRevolution);
+    m_rightEncoder.setDistancePerPulse((Math.PI * Constants.Drive.kWheelDiameterMeters) / Constants.Drive.kCountsPerRevolution);
+
     resetEncoders();
+
+    Pose2d initialPose = new Pose2d(0, 0, m_gyro.getRotation2d());    
+    m_field2d.setRobotPose(initialPose);
+
+    m_poseEstimator = new DifferentialDrivePoseEstimator(
+      Constants.Drive.kDriveKinematics,
+      m_gyro.getRotation2d(), 
+      getLeftDistanceMeters(), 
+      getRightDistanceMeters(), 
+      initialPose,
+      VecBuilder.fill(0.02, 0.02, 0.01),
+      VecBuilder.fill(0.1, 0.1, 0.1)
+    );
+
+    SmartDashboard.putData("Field", m_field2d);
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
@@ -56,6 +65,16 @@ public class Drive extends SubsystemBase {
     m_rightEncoder.reset();
   }
 
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    zeroHeading();
+    m_poseEstimator.resetPosition(Rotation2d.fromDegrees(m_gyro.getAngle()), getAccelY(), getAccelX(), pose);
+  }
+
   public int getLeftEncoderCount() {
     return m_leftEncoder.get();
   }
@@ -64,79 +83,74 @@ public class Drive extends SubsystemBase {
     return m_rightEncoder.get();
   }
 
-  public double getLeftDistanceInch() {
+  public double getLeftDistanceMeters() {
     return m_leftEncoder.getDistance();
   }
 
-  public double getRightDistanceInch() {
+  public double getRightDistanceMeters() {
     return m_rightEncoder.getDistance();
   }
 
-  public double getAverageDistanceInch() {
-    return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
+  public double getAverageDistanceMeters() {
+    return (getLeftDistanceMeters() + getRightDistanceMeters()) / 2.0;
   }
 
-  /**
-   * The acceleration in the X-axis.
-   *
-   * @return The acceleration of the Romi along the X-axis in Gs
-   */
   public double getAccelX() {
     return m_accelerometer.getX();
   }
 
-  /**
-   * The acceleration in the Y-axis.
-   *
-   * @return The acceleration of the Romi along the Y-axis in Gs
-   */
   public double getAccelY() {
     return m_accelerometer.getY();
   }
 
-  /**
-   * The acceleration in the Z-axis.
-   *
-   * @return The acceleration of the Romi along the Z-axis in Gs
-   */
   public double getAccelZ() {
     return m_accelerometer.getZ();
   }
 
-  /**
-   * Current angle of the Romi around the X-axis.
-   *
-   * @return The current angle of the Romi in degrees
-   */
   public double getGyroAngleX() {
     return m_gyro.getAngleX();
   }
 
-  /**
-   * Current angle of the Romi around the Y-axis.
-   *
-   * @return The current angle of the Romi in degrees
-   */
   public double getGyroAngleY() {
     return m_gyro.getAngleY();
   }
 
-  /**
-   * Current angle of the Romi around the Z-axis.
-   *
-   * @return The current angle of the Romi in degrees
-   */
   public double getGyroAngleZ() {
     return m_gyro.getAngleZ();
   }
 
-  /** Reset the gyro. */
-  public void resetGyro() {
-    m_gyro.reset();
+  public Pose2d getPose() {
+    return m_poseEstimator.getEstimatedPosition();
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+  }
+
+  public double getHeading() {
+    return m_gyro.getRotation2d().getDegrees();
+  }
+
+  public double getLeftEncoderRate() {
+    return m_leftEncoder.getRate();
+  }
+
+  public double getRightEncoderRate() {
+    return m_rightEncoder.getRate();
+  }
+  
+  public double getTurnRate() {
+    return -m_gyro.getRate();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    m_poseEstimator.update(
+      m_gyro.getRotation2d(),
+      m_leftEncoder.getDistance(),
+      m_rightEncoder.getDistance()
+    );
+
+    m_field2d.setRobotPose(m_poseEstimator.getEstimatedPosition());  
   }
 }

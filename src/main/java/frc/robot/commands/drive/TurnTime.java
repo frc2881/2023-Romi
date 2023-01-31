@@ -30,6 +30,7 @@ public class TurnTime extends CommandBase {
     m_rotationalSpeed = speed;
     m_duration = time * 1000;
     m_drive = drive;
+    
     addRequirements(drive);
   }
 

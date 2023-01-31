@@ -7,6 +7,7 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.Drive;
 
 public class TurnDegrees extends CommandBase {
@@ -26,6 +27,7 @@ public class TurnDegrees extends CommandBase {
     m_degrees = degrees;
     m_speed = speed;
     m_drive = drive;
+    
     addRequirements(drive);
   }
 
@@ -52,19 +54,12 @@ public class TurnDegrees extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    /* Need to convert distance travelled to degrees. The Standard
-       Romi Chassis found here, https://www.pololu.com/category/203/romi-chassis-kits,
-       has a wheel placement diameter (149 mm) - width of the wheel (8 mm) = 141 mm
-       or 5.551 inches. We then take into consideration the width of the tires.
-    */
-    double inchPerDegree = Math.PI * 5.551 / 360;
-    // Compare distance travelled from start to distance based on degree turn
-    return getAverageTurningDistance() >= (inchPerDegree * m_degrees);
+    return getAverageTurningDistance() >= (Constants.Drive.kMetersPerDegree * m_degrees);
   }
 
   private double getAverageTurningDistance() {
-    double leftDistance = Math.abs(m_drive.getLeftDistanceInch());
-    double rightDistance = Math.abs(m_drive.getRightDistanceInch());
+    double leftDistance = Math.abs(m_drive.getLeftDistanceMeters());
+    double rightDistance = Math.abs(m_drive.getRightDistanceMeters());
     return (leftDistance + rightDistance) / 2.0;
   }
 }
