@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.sensors.RomiGyro;
+import frc.robot.utils.RomiGyro;
 
 public class Drive extends SubsystemBase {
   private static final double kCountsPerRevolution = 1440.0;
