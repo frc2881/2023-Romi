@@ -122,6 +122,6 @@ public class Robot extends TimedRobot {
   }
 
   private void updateMatchTime() {
-    SmartDashboard.putNumber("Timing/MatchTime", Math.floor(DriverStation.getMatchTime())); 
+    SmartDashboard.putNumber("Timing/MatchTime", Math.floor(Timer.getMatchTime()));
   }
 }
