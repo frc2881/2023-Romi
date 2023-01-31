@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
   }
 
   private void setupTelemetry() {
-    if (Constants.kEnableAllTelemetry) {
+    if (Constants.Telemetry.kEnableAllTelemetry) {
       LiveWindow.enableAllTelemetry();
     }
     

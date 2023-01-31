@@ -25,17 +25,19 @@ public class RobotContainer {
   private final Drive m_drive = new Drive();
 
   public RobotContainer() {
+    setupDrive();
     setupControllers();
     setupAutonomous();
-    setupDrive();
   }
 
-  private void setupControllers() {
-    if (m_driverController.isConnected()) {
-      // TODO: implement explicit command for automatic logging as opposed to instant command
-      new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(() -> { Log.log("Driver controller A button pressed"); }));
-    }
+  private void setupDrive() {
+    m_drive.setDefaultCommand(
+      new ArcadeDrive(
+        m_drive, 
+        () -> Helpers.applyDeadband(-m_driverController.getRawAxis(1)), 
+        () -> Helpers.applyDeadband(m_driverController.getRawAxis(4))
+      )
+    );
   }
 
   private void setupAutonomous() {
@@ -49,13 +51,11 @@ public class RobotContainer {
     return m_autonomousChooser.getSelected();
   }
 
-  private void setupDrive() {
-    m_drive.setDefaultCommand(
-      new ArcadeDrive(
-        m_drive, 
-        () -> Helpers.applyDeadband(-m_driverController.getRawAxis(1)), 
-        () -> Helpers.applyDeadband(m_driverController.getRawAxis(4))
-      )
-    );
+  private void setupControllers() {
+    if (m_driverController.isConnected()) {
+      // TODO: implement explicit command for automatic logging as opposed to instant command
+      new JoystickButton(m_driverController, XboxController.Button.kA.value)
+        .onTrue(new InstantCommand(() -> { Log.log("Driver controller A button pressed"); }));
+    }
   }
 }
