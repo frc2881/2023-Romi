@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.commands.drive.DriveTime;
 import frc.robot.commands.drive.TurnTime;
+import frc.robot.lib.Utils;
 import frc.robot.subsystems.Drive;
-import frc.robot.utils.Helpers;
 
 public class RunAutoTime extends SequentialCommandGroup {
   /**
@@ -21,7 +21,7 @@ public class RunAutoTime extends SequentialCommandGroup {
    * @param drive The drive subsystem on which this command will run
    */
   public RunAutoTime(Drive drive) {
-    drive.resetOdometry(Helpers.getDefaultPose());
+    drive.resetOdometry(Utils.getDefaultPose());
     
     addCommands(
       new DriveTime(-0.6, 2.0, drive),

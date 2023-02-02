@@ -8,8 +8,8 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.commands.drive.DriveDistance;
+import frc.robot.lib.Utils;
 import frc.robot.subsystems.Drive;
-import frc.robot.utils.Helpers;
 
 public class RunAutoCalibration extends SequentialCommandGroup {
   /**
@@ -18,7 +18,7 @@ public class RunAutoCalibration extends SequentialCommandGroup {
    * @param drive The drivetrain subsystem on which this command will run
    */
   public RunAutoCalibration(Drive drive) {
-    drive.resetOdometry(Helpers.getDefaultPose());
+    drive.resetOdometry(Utils.getDefaultPose());
     
     addCommands(
       new DriveDistance(0.5, 1, drive)

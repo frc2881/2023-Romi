@@ -5,16 +5,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.utils.Log;
+import frc.robot.lib.DataLog;
+import frc.robot.lib.Enums.Mode;
+import frc.robot.lib.Telemetry;
 
 public class Robot extends TimedRobot {
   private static Robot m_robotInstance;
@@ -24,8 +21,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotInstance = this;
-    setupLogging();
-    setupTelemetry();
+    DataLog.logRobotInit();
+    Telemetry.start();
     m_robotContainer = new RobotContainer();
   }
 
@@ -47,7 +44,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    DataLog.logModeInit(Mode.DISABLED);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -55,6 +54,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    DataLog.logModeInit(Mode.AUTONOMOUS);
+
     // Get selected routine from the SmartDashboard
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    DataLog.logModeInit(Mode.TELEOP);
+
     // This makes sure that the autonomous stops running which will
     // use the default command which is ArcadeDrive. If you want the autonomous
     // to continue until interrupted by another command, remove
@@ -85,6 +88,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    DataLog.logModeInit(Mode.TEST);
+
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
@@ -93,35 +98,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 
+  /** This function provides static access to create a custom periodic function in the current robot instance. */
   public static void addCustomPeriodic(Runnable callback, double periodSeconds) {
-    m_robotInstance.addPeriodic(callback, periodSeconds);
-  }
-
-  private void setupLogging() {
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog());
-
-    Log.start();
-
-    CommandScheduler.getInstance().onCommandInitialize(command -> Log.init(command));
-    CommandScheduler.getInstance().onCommandInterrupt(command -> Log.end(command, true));
-    CommandScheduler.getInstance().onCommandFinish(command -> Log.end(command, false));
-  }
-
-  private void setupTelemetry() {
-    if (Constants.Telemetry.kEnableAllTelemetry) {
-      LiveWindow.enableAllTelemetry();
-    }
-    
-    Robot.addCustomPeriodic(this::updateFPGATimestamp, 3);
-    Robot.addCustomPeriodic(this::updateMatchTime, 0.2);
-  }
-
-  private void updateFPGATimestamp() {
-    SmartDashboard.putNumber("Timing/FPGATimestamp", Timer.getFPGATimestamp());
-  }
-
-  private void updateMatchTime() {
-    SmartDashboard.putNumber("Timing/MatchTime", Math.floor(Timer.getMatchTime()));
+    m_robotInstance.addPeriodic(callback, periodSeconds, 0.333);
   }
 }

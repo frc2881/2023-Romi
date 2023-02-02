@@ -9,10 +9,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 public final class Constants {
 
-  public static final class Telemetry {
-    public static final boolean kEnableAllTelemetry = false;
+  public static final class Controllers {
+    public static final int kDriverControllerPort = 0;
+    public static final int kManipulatorControllerPort = 1;
+    public static final double kDeadband = 0.1;
   }
-  
+
   public static final class Drive {
     public static final int kLeftMotorChannel = 0;
     public static final int kRightMotorChannel = 1;
@@ -29,4 +31,5 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics = 
       new DifferentialDriveKinematics(kTrackwidthMeters);
   }
+  
 }

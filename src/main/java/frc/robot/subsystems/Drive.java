@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-import frc.robot.utils.RomiGyro;
+import frc.robot.sensors.RomiGyro;
 
 public class Drive extends SubsystemBase {
   private final Spark m_leftMotor = new Spark(Constants.Drive.kLeftMotorChannel);

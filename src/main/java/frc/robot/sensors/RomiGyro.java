@@ -3,7 +3,7 @@
 // Open Source Software; you can modify and/or share it under the terms of BSD
 // license file in the root directory of this project.
 
-package frc.robot.utils;
+package frc.robot.sensors;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDevice.Direction;
@@ -25,7 +25,6 @@ public class RomiGyro implements Gyro {
   // Needed for interface requirements
   private SimDevice m_gyroSimDevice;
 
-  /** Create a new RomiGyro. */
   public RomiGyro() {
     m_gyroSimDevice = SimDevice.create("Gyro:RomiGyro");
     if (m_gyroSimDevice != null) {
@@ -46,11 +45,7 @@ public class RomiGyro implements Gyro {
    * @return rate of turn in degrees-per-second
    */
   public double getRateX() {
-    if (m_simRateX != null) {
-      return m_simRateX.get();
-    }
-
-    return 0.0;
+    return m_simRateX != null ? m_simRateX.get() : 0.0;
   }
 
   /**
@@ -59,11 +54,7 @@ public class RomiGyro implements Gyro {
    * @return rate of turn in degrees-per-second
    */
   public double getRateY() {
-    if (m_simRateY != null) {
-      return m_simRateY.get();
-    }
-
-    return 0.0;
+    return m_simRateY != null ? m_simRateY.get() : 0.0;
   }
 
   /**
@@ -72,11 +63,7 @@ public class RomiGyro implements Gyro {
    * @return rate of turn in degrees-per-second
    */
   public double getRateZ() {
-    if (m_simRateZ != null) {
-      return m_simRateZ.get();
-    }
-
-    return 0.0;
+    return m_simRateZ != null ? m_simRateZ.get() : 0.0;
   }
 
   /**
@@ -85,11 +72,7 @@ public class RomiGyro implements Gyro {
    * @return current angle around X-axis in degrees
    */
   public double getAngleX() {
-    if (m_simAngleX != null) {
-      return m_simAngleX.get() - m_angleXOffset;
-    }
-
-    return 0.0;
+    return m_simAngleX != null ? m_simAngleX.get() - m_angleXOffset : 0.0;
   }
 
   /**
@@ -98,11 +81,7 @@ public class RomiGyro implements Gyro {
    * @return current angle around Y-axis in degrees
    */
   public double getAngleY() {
-    if (m_simAngleY != null) {
-      return m_simAngleY.get() - m_angleYOffset;
-    }
-
-    return 0.0;
+    return m_simAngleY != null ? m_simAngleY.get() - m_angleYOffset : 0.0;
   }
 
   /**
@@ -111,11 +90,7 @@ public class RomiGyro implements Gyro {
    * @return current angle around Z-axis in degrees
    */
   public double getAngleZ() {
-    if (m_simAngleZ != null) {
-      return m_simAngleZ.get() - m_angleZOffset;
-    }
-
-    return 0.0;
+    return m_simAngleZ != null ? m_simAngleZ.get() - m_angleZOffset : 0.0;
   }
 
   /** Reset the gyro angles to 0. */
@@ -136,9 +111,7 @@ public class RomiGyro implements Gyro {
   }
 
   @Override
-  public void calibrate() {
-    // no-op
-  }
+  public void calibrate() {}
 
   @Override
   public double getAngle() {

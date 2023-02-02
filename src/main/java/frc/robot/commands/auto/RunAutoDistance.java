@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.commands.drive.DriveDistance;
 import frc.robot.commands.drive.TurnDegrees;
+import frc.robot.lib.Utils;
 import frc.robot.subsystems.Drive;
-import frc.robot.utils.Helpers;
 
 public class RunAutoDistance extends SequentialCommandGroup {
   /**
@@ -20,7 +20,7 @@ public class RunAutoDistance extends SequentialCommandGroup {
    * @param drive The drivetrain subsystem on which this command will run
    */
   public RunAutoDistance(Drive drive) {
-    drive.resetOdometry(Helpers.getDefaultPose());
+    drive.resetOdometry(Utils.getDefaultPose());
     
     addCommands(
       new DriveDistance(-0.5, 0.5, drive),

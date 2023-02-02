@@ -17,12 +17,13 @@ import frc.robot.commands.auto.RunAutoTime;
 import frc.robot.commands.drive.ArcadeDrive;
 import frc.robot.commands.drive.ZeroHeading;
 import frc.robot.subsystems.Drive;
-import frc.robot.utils.Helpers;
+
+import frc.robot.lib.Utils;
 
 public class RobotContainer {
-  private final XboxController m_driverController = new XboxController(0);
+  private Drive m_drive = new Drive();
   private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
-  private final Drive m_drive = new Drive();
+  private final XboxController m_driverController = new XboxController(Constants.Controllers.kDriverControllerPort);
 
   public RobotContainer() {
     setupDrive();
@@ -34,8 +35,8 @@ public class RobotContainer {
     m_drive.setDefaultCommand(
       new ArcadeDrive(
         m_drive, 
-        () -> Helpers.applyDeadband(-m_driverController.getRawAxis(1)), 
-        () -> Helpers.applyDeadband(m_driverController.getRawAxis(4))
+        () -> Utils.applyDeadband(-m_driverController.getRawAxis(1), Constants.Controllers.kDeadband), 
+        () -> Utils.applyDeadband(m_driverController.getRawAxis(4), Constants.Controllers.kDeadband)
       )
     );
   }
