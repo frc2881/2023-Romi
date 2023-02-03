@@ -9,8 +9,8 @@ public final class Enums {
     TELEOP("TELEOP"), 
     TEST("TEST");
   
-    Mode(String mode) { this.mode = mode; }
     private String mode;
+    Mode(String mode) { this.mode = mode; }
     public String getMode() { return mode; }
   }
 

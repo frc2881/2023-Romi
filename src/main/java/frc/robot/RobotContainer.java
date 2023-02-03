@@ -50,7 +50,7 @@ public class RobotContainer {
     m_autonomousChooser.setDefaultOption("Calibration", new RunAutoCalibration(m_drive));
     m_autonomousChooser.addOption("Distance", new RunAutoDistance(m_drive));
     m_autonomousChooser.addOption("Time", new RunAutoTime(m_drive));
-    SmartDashboard.putData("AutonomousMode", m_autonomousChooser);
+    SmartDashboard.putData("AutonomousCommand", m_autonomousChooser);
   }
 
   public Command getAutonomousCommand() {
