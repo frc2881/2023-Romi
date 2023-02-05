@@ -31,9 +31,9 @@ public final class DataLog {
     DriverStation.startDataLog(DataLogManager.getLog());
 
     CommandScheduler commandScheduler = CommandScheduler.getInstance();
-    commandScheduler.onCommandInitialize(command -> logCommandInit(command));
-    commandScheduler.onCommandInterrupt(command -> logCommandEnd(command, true));
-    commandScheduler.onCommandFinish(command -> logCommandEnd(command, false));
+    commandScheduler.onCommandInitialize(command -> init(command));
+    commandScheduler.onCommandInterrupt(command -> end(command, true));
+    commandScheduler.onCommandFinish(command -> end(command, false));
   }
 
   /**
@@ -48,7 +48,7 @@ public final class DataLog {
   /**
    * Logs the start of the robot code.
    */
-  public static void logRobotInit() {
+  public static void start() {
     log(
       "*".repeat(20) + " Robot Start, version " +
       DataLog.class.getPackage().getImplementationVersion() + " " +
@@ -61,7 +61,7 @@ public final class DataLog {
    *
    * @param mode is the new robot mode.
    */
-  public static void logModeInit(Mode mode) {
+  public static void mode(Mode mode) {
     log(">".repeat(10) + " Robot mode: " + mode + " " + "<".repeat(10));
   }
 
@@ -70,7 +70,7 @@ public final class DataLog {
    *
    * @param command is the command class that is starting.
    */
-  public static void logCommandInit(Command command) {
+  public static void init(Command command) {
     log("--> Start command: " + command.getClass().getSimpleName());
   }
 
@@ -81,7 +81,7 @@ public final class DataLog {
    *
    * @param settings are the parameters used when starting the command.
    */
-  public static void logCommandInit(Command command, Object... settings) {
+  public static void init(Command command, Object... settings) {
     log(
       "--> Start command: " + command.getClass().getSimpleName() + " (" +
       Stream.of(settings).map(Object::toString).collect(joining(", ")) +
@@ -96,7 +96,7 @@ public final class DataLog {
    *
    * @param isInterrupted is <b>true</b> if the command was interrupted.
    */
-  public static void logCommandEnd(Command command, boolean isInterrupted) {
+  public static void end(Command command, boolean isInterrupted) {
     String name = command.getClass().getSimpleName();
     log("--> " + (isInterrupted ? "Interrupted": "End") + "command: " + name);
   }

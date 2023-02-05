@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotInstance = this;
-    DataLog.logRobotInit();
+    DataLog.start();
     Telemetry.start();
     m_robotContainer = new RobotContainer();
   }
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    DataLog.logModeInit(Mode.DISABLED);
+    DataLog.mode(Mode.DISABLED);
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    DataLog.logModeInit(Mode.AUTONOMOUS);
+    DataLog.mode(Mode.AUTONOMOUS);
 
     // Get selected routine from the SmartDashboard
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    DataLog.logModeInit(Mode.TELEOP);
+    DataLog.mode(Mode.TELEOP);
 
     // This makes sure that the autonomous stops running which will
     // use the default command which is ArcadeDrive. If you want the autonomous
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    DataLog.logModeInit(Mode.TEST);
+    DataLog.mode(Mode.TEST);
 
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
