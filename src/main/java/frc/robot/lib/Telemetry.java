@@ -30,7 +30,7 @@ public final class Telemetry {
   /** This periodic function supports providing the current robot mode and status to the driver station dashbaoard app */
   private static void updateRobotInfo() {
     RobotMode mode = RobotMode.DISABLED;
-    if (RobotState.isAutonomous()) { mode = RobotMode.AUTONOMOUS; }
+    if (RobotState.isAutonomous()) { mode = RobotMode.AUTO; }
     if (RobotState.isTeleop()) { mode = RobotMode.TELEOP; }
     if (RobotState.isTest()) { mode = RobotMode.TEST; }
     SmartDashboard.putString("Robot/Mode", mode.toString());

@@ -5,7 +5,7 @@ public final class Enums {
   public static enum RobotMode 
   {
     DISABLED("DISABLED"), 
-    AUTONOMOUS("AUTONOMOUS"), 
+    AUTO("AUTO"), 
     TELEOP("TELEOP"), 
     TEST("TEST");
   

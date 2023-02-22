@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    DataLog.mode(RobotMode.AUTONOMOUS);
+    DataLog.mode(RobotMode.AUTO);
 
     // Get selected routine from the SmartDashboard
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
