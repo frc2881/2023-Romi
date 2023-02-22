@@ -2,7 +2,7 @@ package frc.robot.lib;
 
 public final class Enums {
 
-  public static enum Mode 
+  public static enum RobotMode 
   {
     DISABLED("DISABLED"), 
     AUTONOMOUS("AUTONOMOUS"), 
@@ -10,8 +10,19 @@ public final class Enums {
     TEST("TEST");
   
     private String mode;
-    Mode(String mode) { this.mode = mode; }
+    RobotMode(String mode) { this.mode = mode; }
     public String getMode() { return mode; }
+  }
+
+  public static enum RobotStatus 
+  {
+    DISABLED("DISABLED"), 
+    ENABLED("ENABLED"),
+    ESTOPPED("ESTOPPED");
+  
+    private String status;
+    RobotStatus(String status) { this.status = status; }
+    public String gertStatus() { return status; }
   }
 
 }

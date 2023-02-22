@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.lib.DataLog;
-import frc.robot.lib.Enums.Mode;
+import frc.robot.lib.Enums.RobotMode;
 import frc.robot.lib.Telemetry;
 
 public class Robot extends TimedRobot {
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    DataLog.mode(Mode.DISABLED);
+    DataLog.mode(RobotMode.DISABLED);
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    DataLog.mode(Mode.AUTONOMOUS);
+    DataLog.mode(RobotMode.AUTONOMOUS);
 
     // Get selected routine from the SmartDashboard
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    DataLog.mode(Mode.TELEOP);
+    DataLog.mode(RobotMode.TELEOP);
 
     // This makes sure that the autonomous stops running which will
     // use the default command which is ArcadeDrive. If you want the autonomous
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    DataLog.mode(Mode.TEST);
+    DataLog.mode(RobotMode.TEST);
 
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
