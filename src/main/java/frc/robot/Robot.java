@@ -5,12 +5,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.lib.DataLog;
-import frc.robot.lib.Enums.RobotMode;
 import frc.robot.lib.Telemetry;
 
 public class Robot extends TimedRobot {
@@ -45,7 +45,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    DataLog.mode(RobotMode.DISABLED);
+    DataLog.mode(Robot.Mode.DISABLED);
+    m_robotContainer.robotShouldReset();
   }
 
   @Override
@@ -54,15 +55,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    DataLog.mode(RobotMode.AUTO);
-
-    // Get selected routine from the SmartDashboard
+    DataLog.mode(Robot.Mode.AUTO);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    //m_robotContainer.resetRobot();
   }
 
   /** This function is called periodically during autonomous. */
@@ -71,14 +69,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    DataLog.mode(RobotMode.TELEOP);
-
-    // This makes sure that the autonomous stops running which will
-    // use the default command which is ArcadeDrive. If you want the autonomous
-    // to continue until interrupted by another command, remove
-    // this line or comment it out.
+    DataLog.mode(Robot.Mode.TELEOP);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+    if (!isCompetitionMode()) {
+      m_robotContainer.resetRobot();
     }
   }
 
@@ -88,10 +84,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    DataLog.mode(RobotMode.TEST);
-
-    // Cancels all running commands at the start of test mode.
+    DataLog.mode(Robot.Mode.TEST);
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.resetRobot();
   }
 
   /** This function is called periodically during test mode. */
@@ -101,5 +96,33 @@ public class Robot extends TimedRobot {
   /** This function provides static access to create a custom periodic function in the current robot instance. */
   public static void addCustomPeriodic(Runnable callback, double periodSeconds) {
     m_robotInstance.addPeriodic(callback, periodSeconds, 0.333);
+  }
+
+  public static boolean isCompetitionMode() {
+    // In Practice mode and in a real competition getMatchTime() returns time left in this part of the match. Otherwise it just returns -1.0.
+    return DriverStation.getMatchTime() != -1;
+  }
+
+  public static enum Mode 
+  {
+    DISABLED("DISABLED"), 
+    AUTO("AUTO"), 
+    TELEOP("TELEOP"), 
+    TEST("TEST");
+  
+    private String mode;
+    Mode(String mode) { this.mode = mode; }
+    public String getMode() { return mode; }
+  }
+
+  public static enum Status 
+  {
+    DISABLED("DISABLED"), 
+    ENABLED("ENABLED"),
+    ESTOPPED("ESTOPPED");
+  
+    private String status;
+    Status(String status) { this.status = status; }
+    public String gertStatus() { return status; }
   }
 }

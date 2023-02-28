@@ -5,11 +5,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.commands.auto.RunAutoCalibration;
 import frc.robot.commands.auto.RunAutoDistance;
@@ -22,13 +24,17 @@ import frc.robot.lib.Utils;
 
 public class RobotContainer {
   private Drive m_drive = new Drive();
-  private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
+
   private final XboxController m_driverController = new XboxController(Constants.Controllers.kDriverControllerPort);
+
+  private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
+
+  public boolean m_robotResetState = true;
 
   public RobotContainer() {
     setupDrive();
     setupControllers();
-    setupAutonomous();
+    setupAuto();
   }
 
   private void setupDrive() {
@@ -42,18 +48,30 @@ public class RobotContainer {
   }
 
   private void setupControllers() {
-    new JoystickButton(m_driverController, XboxController.Button.kBack.value)
+    new Trigger(m_driverController::getBackButton)
       .onTrue(new ZeroHeading(m_drive));
   }
 
-  private void setupAutonomous() {
-    m_autonomousChooser.setDefaultOption("Calibration", new RunAutoCalibration(m_drive));
+  private void setupAuto() {
+    m_autonomousChooser.setDefaultOption("None", null);
+    m_autonomousChooser.addOption("Calibration", new RunAutoCalibration(m_drive));
     m_autonomousChooser.addOption("Distance", new RunAutoDistance(m_drive));
     m_autonomousChooser.addOption("Time", new RunAutoTime(m_drive));
-    SmartDashboard.putData("AutonomousCommand", m_autonomousChooser);
+    SmartDashboard.putData("Auto/Command", m_autonomousChooser);
   }
 
   public Command getAutonomousCommand() {
     return m_autonomousChooser.getSelected();
+  }
+
+  public void resetRobot() {
+    if(m_robotResetState == true) {
+      // call individual subsystem reset methods as needed
+      m_robotResetState = false;
+    }
+  }
+
+  public void robotShouldReset() {
+    m_robotResetState = true;
   }
 }
