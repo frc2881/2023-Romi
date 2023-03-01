@@ -17,7 +17,7 @@ public final class Telemetry {
 
   /** Initializes default telemetry settings and topics with custom periodic updates */
   public static void start() {
-    SmartDashboard.putBoolean("EnableAllTelemetry", m_isAllTelemetryEnabled);
+    SmartDashboard.putBoolean("IsAllTelemetryEnabled", m_isAllTelemetryEnabled);
 
     Robot.addCustomPeriodic(Telemetry::updateRobotInfo, 1);
     Robot.addCustomPeriodic(Telemetry::updateMatchInfo, 0.3);
@@ -53,10 +53,10 @@ public final class Telemetry {
   private static void updateTelemetrySetting() {
     if (m_isAllTelemetryEnabled && Robot.isCompetitionMode()) {
       m_isAllTelemetryEnabled = false;
-      SmartDashboard.putBoolean("EnableAllTelemetry", m_isAllTelemetryEnabled);
+      SmartDashboard.putBoolean("IsAllTelemetryEnabled", m_isAllTelemetryEnabled);
       LiveWindow.disableAllTelemetry();
     } else {
-      boolean isAllTelemetryEnabled = SmartDashboard.getBoolean("EnableAllTelemetry", m_isAllTelemetryEnabled);
+      boolean isAllTelemetryEnabled = SmartDashboard.getBoolean("IsAllTelemetryEnabled", m_isAllTelemetryEnabled);
       if (m_isAllTelemetryEnabled != isAllTelemetryEnabled) {
         m_isAllTelemetryEnabled = isAllTelemetryEnabled;
         if (m_isAllTelemetryEnabled) {

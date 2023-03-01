@@ -63,7 +63,7 @@ public class RobotContainer {
   }
 
   public void resetRobot() {
-    if(m_robotResetState == true) {
+    if (m_robotResetState) {
       // call individual subsystem reset methods as needed
       m_robotResetState = false;
     }
