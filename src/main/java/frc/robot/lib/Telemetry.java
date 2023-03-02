@@ -51,10 +51,12 @@ public final class Telemetry {
 
   /** This periodic function supports enabling/disabling the full stream of telemetry pushed to LiveWindow. */
   private static void updateTelemetrySetting() {
-    if (m_isAllTelemetryEnabled && Robot.isCompetitionMode()) {
-      m_isAllTelemetryEnabled = false;
-      SmartDashboard.putBoolean("IsAllTelemetryEnabled", m_isAllTelemetryEnabled);
-      LiveWindow.disableAllTelemetry();
+    if (Robot.isCompetitionMode()) {
+      if (m_isAllTelemetryEnabled) {
+        m_isAllTelemetryEnabled = false;
+        LiveWindow.disableAllTelemetry();
+        SmartDashboard.putBoolean("IsAllTelemetryEnabled", false);
+      }
     } else {
       boolean isAllTelemetryEnabled = SmartDashboard.getBoolean("IsAllTelemetryEnabled", m_isAllTelemetryEnabled);
       if (m_isAllTelemetryEnabled != isAllTelemetryEnabled) {
